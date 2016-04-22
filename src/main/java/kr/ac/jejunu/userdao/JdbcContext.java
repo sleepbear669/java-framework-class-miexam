@@ -13,7 +13,8 @@ public class JdbcContext {
         this.dataSource = dataSource;
     }
 
-    User JdbcContextWithStatementStrategyForQuery(StatementStrategy statementStrategy) {
+    User jdbcContextWithStatementStrategyForQuery(StatementStrategy statementStrategy) {
+
         Connection connection = null;
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
@@ -58,7 +59,7 @@ public class JdbcContext {
         return user;
     }
 
-    long JdbcContextWithStatementStrategyForInsert(StatementStrategy statementStrategy) {
+    long jdbcContextWithStatementStrategyForInsert(StatementStrategy statementStrategy) {
         Connection connection = null;
         PreparedStatement preparedStatement = null;
         long lastAddedId = 0;
