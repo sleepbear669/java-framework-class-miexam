@@ -9,6 +9,7 @@ import java.sql.SQLException;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
+import static org.hamcrest.core.IsNull.nullValue;
 import static org.junit.Assert.assertEquals;
 
 public class UserDaoTest {
@@ -51,5 +52,46 @@ public class UserDaoTest {
         assertThat(fetchedUser.getId(), is(lastInsertId));
         assertThat(fetchedUser.getName(), is(name));
         assertThat(fetchedUser.getPassword(), is(password));
+    }
+
+    @Test
+    public void testUpdateUser() throws Exception {
+        // Given
+        final String name = "keuroo";
+        final String password = "gom";
+        final String updaName = "updatekeuroo";
+        final String updatePassword = "updateGom";
+        final User user = new User();
+        user.setName(name);
+        user.setPassword(password);
+        // When
+        long lastInsertId = userDao.add(user);
+        final User fetchedUser = userDao.get(lastInsertId);
+
+        fetchedUser.setName(updaName);
+        fetchedUser.setPassword(updatePassword);
+
+        userDao.update(fetchedUser);
+        // Then
+        assertThat(fetchedUser.getId(), is(lastInsertId));
+        assertThat(fetchedUser.getName(), is(updaName));
+        assertThat(fetchedUser.getPassword(), is(updatePassword));
+
+    }
+
+    @Test
+    public void testDeleteUser() throws Exception {
+        // Given
+        final String name = "keuroo";
+        final String password = "gom";
+        final User user = new User();
+        user.setName(name);
+        user.setPassword(password);
+        // When
+        long lastInsertId = userDao.add(user);
+        userDao.delete(lastInsertId);
+        final User deletedUser = userDao.get(lastInsertId);
+        // Then
+        assertThat(deletedUser, nullValue());
     }
 }
