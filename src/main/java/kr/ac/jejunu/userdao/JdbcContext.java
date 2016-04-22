@@ -13,13 +13,13 @@ public class JdbcContext {
         this.dataSource = dataSource;
     }
 
-    User JdbcContextWithStatementStrategyForQuery(Long id, Connection connection) {
+    User JdbcContextWithStatementStrategyForQuery(StatementStrategy statementStrategy) {
+        Connection connection = null;
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
         User user = null;
         try {
             connection = dataSource.getConnection();
-            StatementStrategy statementStrategy = new GetStatementStrategy(id);
             preparedStatement = statementStrategy.makeStatement(connection);
             resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
@@ -124,5 +124,17 @@ public class JdbcContext {
                 }
             }
         }
+    }
+
+    void update(String sql, Object[] params) {
+        jdbcContextWithStatementStrategyForUpdate(connection -> {
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            for (int i = 0; i < params.length; i++) {
+                preparedStatement.setObject(i + 1, params[i]);
+
+            }
+            return preparedStatement;
+
+        });
     }
 }
