@@ -4,28 +4,47 @@ import java.sql.*;
 
 public class UserDao {
     public User get(Long id) throws ClassNotFoundException, SQLException {
-        //데이터는어디에?   Mysql
-        //Driver Class Load
+
         Class.forName("com.mysql.jdbc.Driver");
-        // Connection    접속정보는? localhost jeju id : jeju pw: jejupw
-        Connection connection = DriverManager.getConnection("jdbc:mysql://localhost/jeju", "jeju", "jejupw");
-        // 쿼리만들고
-        PreparedStatement preparedStatement = connection.prepareStatement("select * from userinfo where id = ?");
+        Connection connection = DriverManager.getConnection("jdbc:mysql://localhost/UserDatabase", "root", "gom0119!1");
+        PreparedStatement preparedStatement = connection.prepareStatement("select * from user where id = ?");
         preparedStatement.setLong(1, id);
-        // 실행
         ResultSet resultSet = preparedStatement.executeQuery();
         resultSet.next();
-        // 결과매핑
         User user = new User();
         user.setId(resultSet.getLong("id"));
         user.setName(resultSet.getString("name"));
         user.setPassword(resultSet.getString("password"));
 
-        //자원을 해지한다.
         resultSet.close();
         preparedStatement.close();
         connection.close();
 
         return user;
+    }
+
+    public long add(User user) throws ClassNotFoundException, SQLException {
+        Class.forName("com.mysql.jdbc.Driver");
+        Connection connection = DriverManager.getConnection("jdbc:mysql://localhost/UserDatabase", "root", "gom0119!1");
+        PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO user(name, password) VALUES (? , ? )");
+        preparedStatement.setString(1, user.getName());
+        preparedStatement.setString(2, user.getPassword());
+        preparedStatement.executeUpdate();
+
+        final long lastAddedId = getLastAddedId(connection);
+        preparedStatement.close();
+        connection.close();
+
+        return lastAddedId;
+    }
+
+    private long getLastAddedId(Connection connection) throws SQLException {
+        final PreparedStatement preparedStatement = connection.prepareStatement("SELECT last_insert_id()");
+        final ResultSet resultSet = preparedStatement.executeQuery();
+        resultSet.next();
+        final long lastAddedId = resultSet.getLong(1);
+        resultSet.close();
+        preparedStatement.close();
+        return lastAddedId;
     }
 }
