@@ -1,5 +1,6 @@
 package kr.ac.jejunu.userdao;
 
+import org.junit.Before;
 import org.junit.Test;
 
 import java.sql.SQLException;
@@ -13,9 +14,15 @@ import static org.junit.Assert.assertEquals;
  */
 public class ProductDaoTest {
 
+    private ProductDao productDao;
+
+    @Before
+    public void setUp() throws Exception {
+        productDao = new DaoFactory().productDao();
+    }
+
     @Test
     public void testGetProduct() throws SQLException, ClassNotFoundException {
-        final ProductDao productDao = new ProductDao();
         Long id = 1L;
         String name = "허윤호";
         String password = "1234";
@@ -29,7 +36,7 @@ public class ProductDaoTest {
     @Test
     public void testAddProduct() throws Exception {
         // Given
-        final ProductDao productDao= new ProductDao();
+
         final String name = "keuroo";
         final String password = "gom";
         final User user = new User();

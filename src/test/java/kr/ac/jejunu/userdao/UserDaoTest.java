@@ -1,5 +1,6 @@
 package kr.ac.jejunu.userdao;
 
+import org.junit.Before;
 import org.junit.Test;
 
 import java.sql.SQLException;
@@ -9,9 +10,16 @@ import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertEquals;
 
 public class UserDaoTest {
+
+    private UserDao userDao;
+
+    @Before
+    public void setUp() throws Exception {
+        userDao = new DaoFactory().userDao();
+    }
+
     @Test
     public void testGetUser() throws SQLException, ClassNotFoundException {
-        UserDao userDao = new UserDao();
         Long id = 1L;
         String name = "허윤호";
         String password = "1234";
@@ -25,7 +33,6 @@ public class UserDaoTest {
     @Test
     public void testAddUser() throws Exception {
         // Given
-        final UserDao userDao = new UserDao();
         final String name = "keuroo";
         final String password = "gom";
         final User user = new User();
