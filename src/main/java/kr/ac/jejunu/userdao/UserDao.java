@@ -17,8 +17,8 @@ public class UserDao {
         User user = null;
         try {
             connection = connectionMaker.getConnection();
-            preparedStatement = connection.prepareStatement("select * from user where id = ?");
-            preparedStatement.setLong(1, id);
+            StatementStrategy statementStrategy = new GetStatementStrategy(id);
+            preparedStatement = statementStrategy.makeStatement(connection);
             resultSet = preparedStatement.executeQuery();
             if(resultSet.next()){
                 user = new User();
@@ -64,9 +64,8 @@ public class UserDao {
         long lastAddedId = 0;
         try {
             connection = connectionMaker.getConnection();
-            preparedStatement = connection.prepareStatement("INSERT INTO user(name, password) VALUES (? , ? )");
-            preparedStatement.setString(1, user.getName());
-            preparedStatement.setString(2, user.getPassword());
+            StatementStrategy statementStrategy = new AddStatementStrategy(user);
+            preparedStatement = statementStrategy.makeStatement(connection);
             preparedStatement.executeUpdate();
             lastAddedId = getLastAddedId(connection);
         } catch (ClassNotFoundException e) {
@@ -108,10 +107,8 @@ public class UserDao {
         PreparedStatement preparedStatement = null;
         try {
             connection = connectionMaker.getConnection();
-            preparedStatement = connection.prepareStatement("UPDATE user set name = ? , password = ? where id = ?");
-            preparedStatement.setString(1, user.getName());
-            preparedStatement.setString(2, user.getPassword());
-            preparedStatement.setLong(3, user.getId());
+            StatementStrategy statementStrategy = new UpdateStatementStrategy(user);
+            preparedStatement = statementStrategy.makeStatement(connection);
             preparedStatement.executeUpdate();
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
@@ -141,8 +138,8 @@ public class UserDao {
         PreparedStatement preparedStatement = null;
         try {
             connection = connectionMaker.getConnection();
-            preparedStatement = connection.prepareStatement("DELETE FROM user where id = ?");
-            preparedStatement.setLong(1, id);
+            StatementStrategy statementStrategy = new DeleteStatementStrategy(id);
+            preparedStatement = statementStrategy.makeStatement(connection);
             preparedStatement.executeUpdate();
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
