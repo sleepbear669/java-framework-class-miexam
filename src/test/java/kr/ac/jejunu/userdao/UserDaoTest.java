@@ -2,6 +2,8 @@ package kr.ac.jejunu.userdao;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 import java.sql.SQLException;
 
@@ -15,7 +17,10 @@ public class UserDaoTest {
 
     @Before
     public void setUp() throws Exception {
-        userDao = new DaoFactory().userDao();
+        ApplicationContext context =new AnnotationConfigApplicationContext(DaoFactory.class);
+//        ApplicationContext context = new GenericXmlApplicationContext("DaoFactory.xml");
+        userDao = (UserDao) context.getBean("userDao");
+//        userDao = new DaoFactory().userDao();
     }
 
     @Test

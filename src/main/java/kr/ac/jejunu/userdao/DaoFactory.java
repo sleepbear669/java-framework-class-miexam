@@ -1,16 +1,23 @@
 package kr.ac.jejunu.userdao;
 
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
 /**
  * Created by sleepbear on 2016. 4. 22..
  */
+@Configuration
 public class DaoFactory {
 
+
+    @Bean
     public UserDao userDao() {
-        return new UserDao(new SimpleConnectionMaker());
+        return new UserDao(getConnectionMaker());
     }
 
-    public ProductDao productDao() {
-        return new ProductDao(new SimpleConnectionMaker());
-
+    @Bean
+    public SimpleConnectionMaker getConnectionMaker() {
+        return new SimpleConnectionMaker();
     }
+
 }
